@@ -1,55 +1,61 @@
-# BApp Store — Community Submissions
+# BApp Store
 
-> **BApp Store** is part of [0rdinals.com](https://0rdinals.com) — a suite of creator tools for Bitcoin inscriptions.
+**BApp Store** is the community submission layer for [0rdinals.com/bapp-store](https://0rdinals.com/bapp-store) — a creator marketplace for Bitcoin inscription apps.
 
-A **BApp** (Bitcoin App) is a small, self-contained React component that generates inscription-ready content directly in the browser. The 0rdinals platform wraps your BApp with:
-
-- Live content preview
-- Advanced inscription options (parent, delegate, metadata, encoding)
-- The **Inscribe** button that sends directly into the [Oodinals](https://oodinals.com) inscription pipeline
-
-You only build the creative part.
+A **BApp** is a small React component that generates inscription-ready content in the browser. You build the creative tool. The platform wraps it with live preview, inscription options, and the **Inscribe** button that sends directly to the [Oodinals](https://oodinals.com) pipeline.
 
 ---
 
-## How to Submit a BApp
+## How to submit
 
-1. **Fork** this repository
-2. **Create** your BApp in `submissions/your-bapp-slug/`
-   - `index.tsx` — your React component (see the [template](template/MyBAppTemplate.tsx))
-   - `manifest.json` — metadata describing your BApp (see [below](#manifest-format))
-   - `preview.png` *(optional)* — a screenshot or example output (~800×600)
-3. **Test** your component locally — it must implement the [`BAppProps`](types/bapp.ts) interface
-4. **Open a Pull Request** using the PR template — fill in all sections
-5. I'll review and, if approved, add it to the live BApp Store
+### 1. Fork this repo
 
----
+Click **Fork** at the top right of this page.
 
-## BApp Rules
+### 2. Create your submission folder
 
-- ✅ Must implement `BAppProps` — receive `onOutput`, call it with `BAppOutput`
-- ✅ Must call `onOutput(null)` when there's nothing valid to inscribe yet
-- ✅ Content must be self-contained — no external fetch calls at inscription time
-- ✅ Must work offline / in a sandboxed environment
-- ✅ Use the design tokens in the [styling guide](#styling-guide) so it fits the dark theme
-- ❌ No hardcoded wallet addresses (use `manifest.json` for developer fees)
-- ❌ No tracking pixels, analytics, or external script loads
-- ❌ No content that violates copyright or platform policies
+```
+submissions/
+  your-bapp-slug/
+    index.tsx       ← your React component
+    manifest.json   ← BApp metadata
+    preview.png     ← example output screenshot (optional but helpful)
+```
 
----
+Copy the starter files:
 
-## Manifest Format
+```bash
+cp template/MyBAppTemplate.tsx submissions/your-bapp-slug/index.tsx
+cp template/manifest.json      submissions/your-bapp-slug/manifest.json
+```
 
-Every submission needs a `manifest.json` alongside `index.tsx`:
+### 3. Build your BApp
+
+Your component receives one prop — `onOutput` — and calls it whenever the content changes:
+
+```tsx
+'use client';
+
+import type { BAppProps } from '../../types/bapp';
+
+export default function MyBApp({ onOutput }: BAppProps) {
+  // call onOutput({ content, contentType, fileName, title }) when ready
+  // call onOutput(null) when there's nothing to inscribe yet
+}
+```
+
+See [`template/MyBAppTemplate.tsx`](template/MyBAppTemplate.tsx) for a full working example, and [`examples/`](examples/) for three real BApps to learn from.
+
+### 4. Fill in `manifest.json`
 
 ```json
 {
   "name": "My BApp Name",
   "slug": "my-bapp-name",
-  "description": "One sentence: what does this BApp create?",
+  "description": "One sentence: what does this create?",
   "icon": "🎨",
   "category": "Art",
-  "tags": ["svg", "generative", "color"],
+  "tags": ["svg", "generative"],
   "outputTypes": ["image/svg+xml"],
   "creatorName": "your-handle",
   "creatorAddress": "bc1p...",
@@ -57,8 +63,8 @@ Every submission needs a `manifest.json` alongside `index.tsx`:
   "featured": false,
   "developerFee": {
     "enabled": false,
-    "address": "bc1p...",
-    "amountSats": 1000,
+    "address": "",
+    "amountSats": 0,
     "mode": "item"
   }
 }
@@ -66,27 +72,53 @@ Every submission needs a `manifest.json` alongside `index.tsx`:
 
 **Categories:** `Art` · `HTML & Web` · `Image` · `3D` · `Utility` · `Community` · `Game`
 
+### 5. Open a Pull Request
+
+Open a PR against `main`. Use the PR template — fill in all sections. I'll review it and add approved BApps to the live store.
+
 ---
 
-## Styling Guide
+## Rules
 
-The platform uses a dark theme. Use these CSS classes (defined via Tailwind) so your BApp looks native:
+- ✅ Component must implement `BAppProps` — call `onOutput` on every change, `onOutput(null)` when empty
+- ✅ Content must be self-contained — no external API or fetch calls at inscription time
+- ✅ Use the [styling classes](#styling) below so your BApp fits the dark platform theme
+- ❌ No hardcoded wallet addresses — put developer fee config in `manifest.json`
+- ❌ No trackers, analytics, or third-party script loads
+- ❌ No content that violates copyright or platform policies
 
-| Class | Purpose |
+---
+
+## Output types
+
+| `contentType` | Use a... |
 |---|---|
-| `input-base` | All text inputs and selects |
-| `text-text` | Primary text |
-| `text-text-dim` | Subdued / label text |
-| `text-text-muted` | Placeholder / hint text |
-| `bg-card` | Card background |
-| `bg-input` | Input background (`#1e1e26`) |
-| `border-border` | Standard border |
-| `text-punk` | Accent cyan (`#22d3ee`) |
-| `text-accent2` | Accent teal (`#00d4aa`) |
-| `font-mono` | JetBrains Mono |
-| `font-display` | Syne (headings) |
+| `image/svg+xml` | `string` |
+| `text/html;charset=utf-8` | `string` |
+| `text/plain` | `string` |
+| `application/json` | `string` |
+| `image/png` / `image/webp` | `Blob` |
+| `model/gltf-binary` | `Blob` |
 
-For button toggles use:
+---
+
+## Styling
+
+The platform runs a dark theme with Tailwind. Use these classes in your component so it looks native:
+
+| Class | What it styles |
+|---|---|
+| `input-base` | Text inputs and selects (dark bg, themed border + focus ring) |
+| `text-text` | Primary text |
+| `text-text-dim` | Label / subdued text |
+| `text-text-muted` | Placeholder / hint text |
+| `bg-input` | Input background `#1e1e26` |
+| `border-border` | Standard border `#2a2a35` |
+| `text-punk` | Cyan accent `#22d3ee` |
+| `text-accent2` | Teal accent `#00d4aa` |
+| `font-mono` | JetBrains Mono |
+
+Toggle buttons:
 ```tsx
 className={`px-3 py-1 rounded text-xs font-mono border transition-colors ${
   active
@@ -97,32 +129,16 @@ className={`px-3 py-1 rounded text-xs font-mono border transition-colors ${
 
 ---
 
-## Output Types
-
-Your `onOutput` call must include a valid `contentType`. Supported MIME types:
-
-| Type | Notes |
-|---|---|
-| `image/svg+xml` | Inline SVG string |
-| `text/html;charset=utf-8` | Full HTML document |
-| `text/plain` | Plain text |
-| `application/json` | JSON data |
-| `image/png` | PNG `Blob` |
-| `image/webp` | WebP `Blob` |
-| `model/gltf-binary` | GLB `Blob` |
-
----
-
 ## Examples
 
-| BApp | Category | Output |
+| File | Category | Output |
 |---|---|---|
-| [Generative Text](examples/GenerativeTextApp.tsx) | Art | SVG |
-| [SVG Pattern Generator](examples/SvgPatternApp.tsx) | Art | SVG |
-| [HTML Card Maker](examples/HtmlCardApp.tsx) | HTML & Web | HTML |
+| [GenerativeTextApp.tsx](examples/GenerativeTextApp.tsx) | Art | `image/svg+xml` |
+| [SvgPatternApp.tsx](examples/SvgPatternApp.tsx) | Art | `image/svg+xml` |
+| [HtmlCardApp.tsx](examples/HtmlCardApp.tsx) | HTML & Web | `text/html` |
 
 ---
 
 ## Questions?
 
-Open an [issue](https://github.com/switch-900/BappStore/issues) or reach out on-chain.
+Open an [issue](https://github.com/switch-900/BappStore/issues).
