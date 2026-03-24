@@ -1,0 +1,19 @@
+{
+  "name": "My BApp Name",
+  "slug": "my-bapp-name",
+  "description": "One sentence: what does this BApp create and inscribe?",
+  "icon": "🎨",
+  "category": "Art",
+  "tags": ["svg", "generative", "example"],
+  "outputTypes": ["image/svg+xml"],
+  "creatorName": "your-handle",
+  "creatorAddress": "bc1p...",
+  "version": "1.0.0",
+  "featured": false,
+  "developerFee": {
+    "enabled": false,
+    "address": "bc1p...",
+    "amountSats": 0,
+    "mode": "item"
+  }
+}

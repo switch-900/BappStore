@@ -1,0 +1,19 @@
+{
+  "name": "Generative Text",
+  "slug": "generative-text",
+  "description": "Create inscription-ready SVG art from custom text with font, color, and layout controls.",
+  "icon": "✍️",
+  "category": "Art",
+  "tags": ["svg", "text", "generative", "typography"],
+  "outputTypes": ["image/svg+xml"],
+  "creatorName": "0rdinals",
+  "creatorAddress": "",
+  "version": "1.0.0",
+  "featured": true,
+  "developerFee": {
+    "enabled": false,
+    "address": "",
+    "amountSats": 0,
+    "mode": "item"
+  }
+}

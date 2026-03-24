@@ -1,0 +1,58 @@
+name: BApp Submission
+description: Submit a new BApp for review
+title: "[BApp] "
+labels: ["submission"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: BApp Name
+      placeholder: "e.g. Pixel Grid Generator"
+    validations:
+      required: true
+
+  - type: input
+    id: slug
+    attributes:
+      label: Slug (URL-safe, kebab-case)
+      placeholder: "e.g. pixel-grid-generator"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Art
+        - HTML & Web
+        - Image
+        - 3D
+        - Utility
+        - Community
+        - Game
+    validations:
+      required: true
+
+  - type: input
+    id: output
+    attributes:
+      label: Output type
+      placeholder: "e.g. image/svg+xml"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What does it create?
+      placeholder: "Describe what your BApp generates and why creators would want to inscribe it."
+    validations:
+      required: true
+
+  - type: input
+    id: creator
+    attributes:
+      label: Your handle / name
+    validations:
+      required: true
