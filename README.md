@@ -139,6 +139,12 @@ className={`px-3 py-1 rounded text-xs font-mono border transition-colors ${
 
 ---
 
+## Don't know how to code?
+
+Use the **[AI Vibe Code Prompt Sheet](VIBE_CODE.md)** — copy the prompt, fill in your idea at the bottom, and hand it to any AI (ChatGPT, Claude, Copilot). It returns a ready-to-submit `index.tsx` and `manifest.json`.
+
+---
+
 ## Questions?
 
 Open an [issue](https://github.com/switch-900/BappStore/issues).
